@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.util.datalog.DataLog;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.config.RobotConfig;
@@ -28,7 +30,7 @@ public class Sub_Swerve extends SubsystemBase {
   //En este subsistema se unen los 4 modulos y el giroscopio 
    
   private final Sub_Modulo Modulo_1 = new Sub_Modulo(3, 4, true, true, 10, false);
-  private final Sub_Modulo Modulo_2 = new Sub_Modulo(5, 6, true, true, 11,  true);
+  private final Sub_Modulo Modulo_2 = new Sub_Modulo(5, 6, true, true, 11,  false);
   private final Sub_Modulo Modulo_3 = new Sub_Modulo(7, 8, true, true, 12,  false);
   private final Sub_Modulo Modulo_4 = new Sub_Modulo(1, 2, true, true, 9 , false);
   private final Pigeon2 Pigeon = new Pigeon2(13);
@@ -38,6 +40,7 @@ public class Sub_Swerve extends SubsystemBase {
   private Field2d field= new Field2d();
   double[] array;
   RobotConfig config;
+  
   
   private final AprilTagFieldLayout apriltag= AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
   
@@ -52,7 +55,7 @@ public class Sub_Swerve extends SubsystemBase {
       e.printStackTrace();
     }
     States= NetworkTableInstance.getDefault().getStructArrayTopic("Swerve", SwerveModuleState.struct).publish();
-  
+    DataLogManager.start();
     
   }
   

@@ -4,13 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Swerve;
 import frc.robot.subsystems.Sub_Swerve;
 import java.util.function.Supplier;
+
+import dev.doglog.DogLog;
 
 public class Cmd_Move_Swerve extends Command {
   private final Sub_Swerve sub_Swerve;
@@ -34,6 +35,7 @@ public class Cmd_Move_Swerve extends Command {
   ChassisSpeeds chassisSpeeds;
   @Override
   public void execute() {
+    DogLog.log("Yaw", sub_Swerve.Head());
     double velocidadx=Xaxis.get()*-1;
     double velocidady=(Yaxis.get())*-1;
     double velocidad_giros=giros.get()*-1;
@@ -43,19 +45,20 @@ public class Cmd_Move_Swerve extends Command {
       if (Math.abs(velocidadx)>0.6){
       }
     }
+    
 
     if (Math.abs(Xaxis.get())<0.05){velocidadx=0;}
     if (Math.abs(Yaxis.get())<0.05){velocidady=0;}
     if (Math.abs(giros.get())<0.05){velocidad_giros=0;}
 
-
+    DogLog.log("Xspeed", velocidadx);
     
 
     if (slow.get()){
-      fium=.2;
+      fium=.85;
     }
     else{
-      fium=.2;
+      fium=.85;
     }
 
     if (fieldoriented.get()){
