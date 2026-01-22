@@ -55,7 +55,7 @@ public class Cmd_Move_Swerve extends Command {
     
 
     if (slow.get()){
-      fium=.85;
+      fium=.5;
     }
     else{
       fium=.85;
