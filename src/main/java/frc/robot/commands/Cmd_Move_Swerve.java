@@ -11,7 +11,6 @@ import frc.robot.Constants.Swerve;
 import frc.robot.subsystems.Sub_Swerve;
 import java.util.function.Supplier;
 
-import dev.doglog.DogLog;
 
 public class Cmd_Move_Swerve extends Command {
   private final Sub_Swerve sub_Swerve;
@@ -35,7 +34,6 @@ public class Cmd_Move_Swerve extends Command {
   ChassisSpeeds chassisSpeeds;
   @Override
   public void execute() {
-    DogLog.log("Yaw", sub_Swerve.Head());
     double velocidadx=Xaxis.get()*-1;
     double velocidady=(Yaxis.get())*-1;
     double velocidad_giros=giros.get()*-1;
@@ -51,14 +49,13 @@ public class Cmd_Move_Swerve extends Command {
     if (Math.abs(Yaxis.get())<0.05){velocidady=0;}
     if (Math.abs(giros.get())<0.05){velocidad_giros=0;}
 
-    DogLog.log("Xspeed", velocidadx);
     
 
     if (slow.get()){
       fium=.5;
     }
     else{
-      fium=.85;
+      fium=.75;
     }
 
     if (fieldoriented.get()){
