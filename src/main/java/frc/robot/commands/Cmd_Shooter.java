@@ -37,7 +37,18 @@ public class Cmd_Shooter extends Command {
   public void execute() {
     double Speed_M1=RT.get()-LT.get();
     Shooter.setShooter1Speed(Speed_M1);
-    Shooter.setShooter2Speed(Speed_M1);
+    if(RB.get()){
+      Shooter.setShooter2Speed(.5);
+    }
+    else{
+      if(LB.get()){
+        Shooter.setShooter2Speed(-.5);
+      }
+      else{
+        Shooter.setShooter2Speed(0);
+      }
+    }
+
       if(A.get()){
       Shooter.setShooter3Speed(.5);
     }
@@ -66,6 +77,7 @@ public class Cmd_Shooter extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Shooter.setShooter2Speed(0);
     Shooter.setShooter3Speed(0);
     Shooter.setShooter4Speed(0);
   }

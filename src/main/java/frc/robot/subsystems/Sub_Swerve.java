@@ -3,14 +3,15 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.Swerve;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,6 +21,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.networktables.StructTopic;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -27,26 +30,28 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-
 public class Sub_Swerve extends SubsystemBase {
   //En este subsistema se unen los 4 modulos y el giroscopio 
-   
   private final Sub_Modulo Modulo_1 = new Sub_Modulo(3, 4, true, true, 10, false);
   private final Sub_Modulo Modulo_2 = new Sub_Modulo(5, 6, true, true, 11,  false);
   private final Sub_Modulo Modulo_3 = new Sub_Modulo(7, 8, true, true, 12,  false);
   private final Sub_Modulo Modulo_4 = new Sub_Modulo(1, 2, true, true, 9 , false);
   private final Pigeon2 Pigeon = new Pigeon2(13);
   private final StructArrayPublisher<SwerveModuleState> States;
+  private final StructPublisher<Pose2d> Poses;
+  private final StructPublisher<Pose2d> Odo;
+  //private final StructArrayPublisher<Pose2d> ArrayPoses;
   //private final SwerveDriveOdometry odometry= new SwerveDriveOdometry(Swerve.swervekinematics,gyro.getRotation2d(), getModulePositions());
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions());
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(),new Pose2d(0,0,get2Drotation()));
   private Field2d field= new Field2d();
   double[] array;
+  //Pose2d[] Poseodoyest;
   RobotConfig config;
-  
   
   private final AprilTagFieldLayout apriltag= AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
   
-  
+  private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(), new Pose2d(0,0,get2Drotation()));
+    
 
   public Sub_Swerve() {
     new Thread(()->{try {Thread.sleep(1000); zeroHeading();}catch(Exception e ){}}).start(); 
@@ -57,14 +62,19 @@ public class Sub_Swerve extends SubsystemBase {
       e.printStackTrace();
     }
     States= NetworkTableInstance.getDefault().getStructArrayTopic("Swerve", SwerveModuleState.struct).publish();
+    //ArrayPoses= NetworkTableInstance.getDefault().getStructArrayTopic("Swerve", Pose2d.struct).publish();
+    Poses= NetworkTableInstance.getDefault().getStructTopic("Poses",Pose2d.struct).publish();
+    Odo= NetworkTableInstance.getDefault().getStructTopic("Odometry",Pose2d.struct).publish();
+
+    // Configure AutoBuilder last
      AutoBuilder.configure(
             this::getPose, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            (speeds, feedforwards) -> setSpeeds(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+                    new PIDConstants(0.4, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(.52, 0.0, 0.0) // Rotation PID constants
             ),
             config, // The robot configuration
             () -> {
@@ -79,8 +89,7 @@ public class Sub_Swerve extends SubsystemBase {
               return false;
             },
             this // Reference to this subsystem to set requirements
-    );
-    
+    ); 
   }
   
 
@@ -90,16 +99,61 @@ public class Sub_Swerve extends SubsystemBase {
     field.setRobotPose(getPose()); 
     SmartDashboard.putNumber("Yaw", Head());
     SmartDashboard.putNumber("Radianes", getYawRadians());
-    odometry.update(get2Drotation(), getModulePositions());
+    poseEstimator.update(get2Drotation(), getModulePositions());
     States.set(getModuleStates());
+    //Poseodoyest[0]=odometry.getPoseMeters();
+    //Poseodoyest[1]=poseEstimator.getEstimatedPosition();
+    Poses.set(poseEstimator.getEstimatedPosition());
+    Odo.set(odometry.getPoseMeters());
+    //ArrayPoses.set(Poseodoyest);
     SmartDashboard.putNumberArray("X", getBotpose_TargetSpace());
     double[] x= getBotpose_TargetSpace();
     SmartDashboard.putNumber("Lime X", x[2]);
     SmartDashboard.putNumber("Lime Y", x[0]);
     SmartDashboard.putNumber("Lime ROT", x[4]);
-    SmartDashboard.putNumber("Speed", Modulo_1.getDriveVelocity());
-    SmartDashboard.putNumber("Amp drive", Modulo_1.getcorrientedrive());
-    SmartDashboard.putNumber("Amp giro", Modulo_1.getcorrienteturn());
+
+    LimelightHelpers.SetRobotOrientation("limelight-abt", Head(), 0, 0, 0, 0, 0);
+
+    if(getTv()==1){
+      double[] botpose= 
+      NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("botpose_wpiblue").getDoubleArray(new double [6]); 
+
+      Pose2d visionPose= new Pose2d(
+        botpose[0], 
+        botpose[1], 
+        Rotation2d.fromDegrees(botpose[5])
+      ); 
+
+      SmartDashboard.putNumber("Vision X", visionPose.getX()); 
+      SmartDashboard.putNumber("Vision Y", visionPose.getY());
+
+      double latency = 
+        LimelightHelpers.getLatency_Pipeline("limelight-abt") +
+        LimelightHelpers.getLatency_Capture("limelight-abt");
+
+      double timestamp = 
+        edu.wpi.first.wpilibj.Timer.getFPGATimestamp() - latency / 1000.0; 
+
+      poseEstimator.addVisionMeasurement(visionPose, timestamp);
+      resetPose(visionPose);
+
+    }
+
+    SmartDashboard.putNumber("Pose X", getPose().getX());
+    SmartDashboard.putNumber("Pose Y", getPose().getY()); 
+    SmartDashboard.putNumber("Pose rot", getPose().getRotation().getDegrees());
+
+    if(getTv()==1){
+      SmartDashboard.putBoolean("Vision used", true); 
+    }
+    else{
+      SmartDashboard.putBoolean("Vision used", false); 
+    }
+      odometry.update(get2Drotation(), getModulePositions());
+      poseEstimator.update(get2Drotation(), getModulePositions());
+    
+    
+
   }
 
   public void zeroHeading(){
@@ -121,12 +175,12 @@ public class Sub_Swerve extends SubsystemBase {
 
 
   public Pose2d getPose(){
-    return odometry.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
   }
 
 
   public void resetPose(Pose2d pose2d){
-    odometry.resetPosition(get2Drotation(), getModulePositions(), pose2d);
+    poseEstimator.resetPosition(get2Drotation(), getModulePositions(), pose2d);
   }
 
   public ChassisSpeeds getChassisSpeeds(){
@@ -154,10 +208,6 @@ public class Sub_Swerve extends SubsystemBase {
     ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
     SwerveModuleState[] targetStates = Swerve.swervekinematics.toSwerveModuleStates(targetSpeeds);
     setModuleStates(targetStates);
-  }
-
-  public void setSpeeds(ChassisSpeeds Speeds){
-    setModuleStates(Swerve.swervekinematics.toSwerveModuleStates(Speeds));
   }
     
 
@@ -192,38 +242,37 @@ public class Sub_Swerve extends SubsystemBase {
     positions[3]=Modulo_4.getState();
     return positions;
     }
-
     ////////////////////////LIMELIGHT////////////////////////
   public double getTx() {
-    return NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("tx").getDouble(0);
+    return NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("tx").getDouble(0);
   }
 
   public double getTy() {
-    return NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("ty").getDouble(0);
+    return NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("ty").getDouble(0);
   }
 
   public double getTa() {
-    return NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("ta").getDouble(10);
+    return NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("ta").getDouble(10);
   }
 
   public double getTid() {
-    return NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("tid").getDouble(0);
+    return NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("tid").getDouble(0);
   }
 
   public void SetVisionMode(Double m) {
-    NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("pipeline").setNumber(m);
+    NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("pipeline").setNumber(m);
   }
 
   public double getTxnc(){
-    return NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("txnc").getDouble(0);
+    return NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("txnc").getDouble(0);
   }
 
   public long getTv(){
-    return NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("tv").getInteger(0);
+    return NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("tv").getInteger(0);
   }
 
   public double[] getBotpose_TargetSpace(){
-    return NetworkTableInstance.getDefault().getTable("limelight-abtomat").getEntry("botpose_targetspace").getDoubleArray(new double[6]);
+    return NetworkTableInstance.getDefault().getTable("limelight-abt").getEntry("botpose_targetspace").getDoubleArray(new double[6]);
   }
 
   public Pose2d getAprilTagPose(int ArpiltagID){
