@@ -22,8 +22,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.networktables.StructTopic;
-
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -40,16 +38,11 @@ public class Sub_Swerve extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> States;
   private final StructPublisher<Pose2d> Poses;
   private final StructPublisher<Pose2d> Odo;
-  //private final StructArrayPublisher<Pose2d> ArrayPoses;
-  //private final SwerveDriveOdometry odometry= new SwerveDriveOdometry(Swerve.swervekinematics,gyro.getRotation2d(), getModulePositions());
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(),new Pose2d(0,0,get2Drotation()));
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(),new Pose2d(10.032,2.086,get2Drotation()));
   private Field2d field= new Field2d();
   double[] array;
-  //Pose2d[] Poseodoyest;
   RobotConfig config;
-  
   private final AprilTagFieldLayout apriltag= AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
-  
   private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(), new Pose2d(0,0,get2Drotation()));
     
 
@@ -62,7 +55,6 @@ public class Sub_Swerve extends SubsystemBase {
       e.printStackTrace();
     }
     States= NetworkTableInstance.getDefault().getStructArrayTopic("Swerve", SwerveModuleState.struct).publish();
-    //ArrayPoses= NetworkTableInstance.getDefault().getStructArrayTopic("Swerve", Pose2d.struct).publish();
     Poses= NetworkTableInstance.getDefault().getStructTopic("Poses",Pose2d.struct).publish();
     Odo= NetworkTableInstance.getDefault().getStructTopic("Odometry",Pose2d.struct).publish();
 
@@ -73,8 +65,8 @@ public class Sub_Swerve extends SubsystemBase {
             this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-                    new PIDConstants(0.4, 0.0, 0.0), // Translation PID constants
-                    new PIDConstants(.52, 0.0, 0.0) // Rotation PID constants
+                    new PIDConstants(2, 0.0, 0.01), // Translation PID constants
+                    new PIDConstants(.58, 0.0, 0.0) // Rotation PID constants
             ),
             config, // The robot configuration
             () -> {
@@ -101,11 +93,8 @@ public class Sub_Swerve extends SubsystemBase {
     SmartDashboard.putNumber("Radianes", getYawRadians());
     poseEstimator.update(get2Drotation(), getModulePositions());
     States.set(getModuleStates());
-    //Poseodoyest[0]=odometry.getPoseMeters();
-    //Poseodoyest[1]=poseEstimator.getEstimatedPosition();
     Poses.set(poseEstimator.getEstimatedPosition());
     Odo.set(odometry.getPoseMeters());
-    //ArrayPoses.set(Poseodoyest);
     SmartDashboard.putNumberArray("X", getBotpose_TargetSpace());
     double[] x= getBotpose_TargetSpace();
     SmartDashboard.putNumber("Lime X", x[2]);
@@ -123,9 +112,6 @@ public class Sub_Swerve extends SubsystemBase {
         botpose[1], 
         Rotation2d.fromDegrees(botpose[5])
       ); 
-
-      SmartDashboard.putNumber("Vision X", visionPose.getX()); 
-      SmartDashboard.putNumber("Vision Y", visionPose.getY());
 
       double latency = 
         LimelightHelpers.getLatency_Pipeline("limelight-abt") +
@@ -181,6 +167,7 @@ public class Sub_Swerve extends SubsystemBase {
 
   public void resetPose(Pose2d pose2d){
     poseEstimator.resetPosition(get2Drotation(), getModulePositions(), pose2d);
+    odometry.resetPosition(get2Drotation(), getModulePositions(), pose2d);
   }
 
   public ChassisSpeeds getChassisSpeeds(){

@@ -27,13 +27,13 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController joydrive = new CommandXboxController(0);
-  private final CommandXboxController saddrive = new CommandXboxController(0);
+ // private final CommandXboxController saddrive = new CommandXboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     Swerve.setDefaultCommand(new Cmd_Move_Swerve(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean()));
-    shooter.setDefaultCommand(new Cmd_Shooter(shooter, () -> saddrive.getRightTriggerAxis(), () -> saddrive.getLeftTriggerAxis(), () -> saddrive.rightBumper().getAsBoolean(), () -> saddrive.leftBumper().getAsBoolean(), () -> saddrive.a().getAsBoolean(),() -> saddrive.b().getAsBoolean(), () -> saddrive.x().getAsBoolean(), () -> saddrive.y().getAsBoolean()));
+    //shooter.setDefaultCommand(new Cmd_Shooter(shooter, () -> saddrive.getRightTriggerAxis(), () -> saddrive.getLeftTriggerAxis(), () -> saddrive.rightBumper().getAsBoolean(), () -> saddrive.leftBumper().getAsBoolean(), () -> saddrive.a().getAsBoolean(),() -> saddrive.b().getAsBoolean(), () -> saddrive.x().getAsBoolean(), () -> saddrive.y().getAsBoolean()));
     configureBindings();
   }
 
