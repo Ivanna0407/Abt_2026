@@ -19,7 +19,7 @@ public class Sub_Shooter extends SubsystemBase {
   private final SparkFlex Shooter_1 = new SparkFlex(14, MotorType.kBrushless);
   private final SparkFlex Shooter_2 = new SparkFlex(15, MotorType.kBrushless);
   private final SparkMax Shooter_3 = new SparkMax(18, MotorType.kBrushless);
-  private final SparkMax Shooter_4 = new SparkMax(19, MotorType.kBrushless);
+  private final SparkMax Shooter_4 = new SparkMax(16, MotorType.kBrushless);
   private final SparkFlexConfig shooter_1Config = new SparkFlexConfig();
   private final SparkFlexConfig shooter_2Config = new SparkFlexConfig();
   private final SparkMaxConfig shooter_3Config = new SparkMaxConfig();
