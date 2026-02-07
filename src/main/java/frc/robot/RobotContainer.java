@@ -9,7 +9,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Cmd_Move_Swerve;
-import frc.robot.commands.Cmd_Shooter;
 import frc.robot.commands.Cmd_resetheading;
 import frc.robot.subsystems.Sub_Shooter;
 import frc.robot.subsystems.Sub_Swerve;
@@ -33,7 +32,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     Swerve.setDefaultCommand(new Cmd_Move_Swerve(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean()));
-    shooter.setDefaultCommand(new Cmd_Shooter(shooter, () -> saddrive.getRightTriggerAxis(), () -> saddrive.getLeftTriggerAxis(), () -> saddrive.rightBumper().getAsBoolean(), () -> saddrive.leftBumper().getAsBoolean(), () -> saddrive.a().getAsBoolean(),() -> saddrive.b().getAsBoolean(), () -> saddrive.x().getAsBoolean(), () -> saddrive.y().getAsBoolean()));
+    
     configureBindings();
   }
 

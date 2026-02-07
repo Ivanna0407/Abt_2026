@@ -60,7 +60,7 @@ public class Sub_Swerve extends SubsystemBase {
 
     // Configure AutoBuilder last
      AutoBuilder.configure(
-            this::getPose, // Robot pose supplier
+            this::getPoseodo, // Robot pose supplier
             this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
@@ -70,10 +70,6 @@ public class Sub_Swerve extends SubsystemBase {
             ),
             config, // The robot configuration
             () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              // This will flip the path being followed to the red side of the field.
-              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
               var alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
                 return alliance.get() == DriverStation.Alliance.Red;
@@ -125,10 +121,6 @@ public class Sub_Swerve extends SubsystemBase {
 
     }
 
-    SmartDashboard.putNumber("Pose X", getPose().getX());
-    SmartDashboard.putNumber("Pose Y", getPose().getY()); 
-    SmartDashboard.putNumber("Pose rot", getPose().getRotation().getDegrees());
-
     if(getTv()==1){
       SmartDashboard.putBoolean("Vision used", true); 
     }
@@ -162,6 +154,10 @@ public class Sub_Swerve extends SubsystemBase {
 
   public Pose2d getPose(){
     return poseEstimator.getEstimatedPosition();
+  }
+
+  public Pose2d getPoseodo(){
+    return odometry.getPoseMeters();
   }
 
 

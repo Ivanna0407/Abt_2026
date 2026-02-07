@@ -5,10 +5,12 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
@@ -21,7 +23,7 @@ import frc.robot.Constants.Swerve;
 
 public class Sub_Modulo extends SubsystemBase {
   //Se crean los objetos 
-    private final SparkMax driveMotor;
+    private final SparkFlex driveMotor;
     private final SparkMax turningMotor;
     private final RelativeEncoder driveEncoder;
     private final RelativeEncoder turningEncoder;
@@ -37,8 +39,8 @@ public class Sub_Modulo extends SubsystemBase {
         this.absoluteEncoderReversed=inverted_encoder_abs;
         absoluteEncoder = new CANcoder(Encoder_Absoluto_ID);
         turningMotor= new SparkMax(Turn_Motor_ID,MotorType.kBrushless);
-        driveMotor= new SparkMax(Drive_Motor_ID, MotorType.kBrushless);
-        SparkMaxConfig configdrive= new SparkMaxConfig();
+        driveMotor= new SparkFlex(Drive_Motor_ID, MotorType.kBrushless);
+        SparkFlexConfig configdrive= new SparkFlexConfig();
         SparkMaxConfig configturn=new SparkMaxConfig();
 
         configdrive.inverted(Inverted_Drive_Motor).idleMode(IdleMode.kBrake);
