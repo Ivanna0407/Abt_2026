@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Cmd_AutoAlign;
 import frc.robot.commands.Cmd_Move_Swerve;
 import frc.robot.commands.Cmd_Test_Feeder;
+import frc.robot.commands.Cmd_Test_Intake;
+import frc.robot.commands.Cmd_Test_Shooter;
 import frc.robot.commands.Cmd_resetheading;
+import frc.robot.subsystems.Sub_Intake;
 import frc.robot.subsystems.Sub_Shooter;
 import frc.robot.subsystems.Sub_Swerve;
 
@@ -25,15 +28,18 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Sub_Swerve Swerve= new Sub_Swerve();
   private final Sub_Shooter shooter = new Sub_Shooter();
+  private final Sub_Intake Intake = new Sub_Intake();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController joydrive = new CommandXboxController(0);
-  private final CommandXboxController saddrive = new CommandXboxController(1);
+  private final CommandXboxController subdrive = new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     Swerve.setDefaultCommand(new Cmd_Move_Swerve(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean()));
+    Intake.setDefaultCommand(new Cmd_Test_Intake(Intake, () -> joydrive.rightBumper().getAsBoolean(), () -> joydrive.leftBumper().getAsBoolean(), () -> joydrive.a().getAsBoolean(),() -> joydrive.b().getAsBoolean()));
+    shooter.setDefaultCommand(new Cmd_Test_Shooter(shooter, () -> subdrive.getRightTriggerAxis() , () -> subdrive.b().getAsBoolean(), () -> subdrive.a().getAsBoolean(), () -> subdrive.x().getAsBoolean(), ()-> subdrive.y().getAsBoolean()));
     
     configureBindings();
   }
@@ -42,14 +48,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     joydrive.start().whileTrue(new Cmd_resetheading(Swerve));
-    joydrive.a().whileTrue(new Cmd_Test_Feeder(shooter, .5));
-    joydrive.b().whileTrue(new Cmd_Test_Feeder(shooter, -.5));
-
-    joydrive.x().whileTrue(new Cmd_AutoAlign(false, Swerve));
-
-    //joydrive.a().whileTrue(new Cmd_climb(Swerve, .3));
-   // joydrive.b().whileTrue(new Cmd_climb(Swerve, -.3));
-    
+    joydrive.x().whileTrue(new Cmd_AutoAlign(false, Swerve));    
   }
 
   /**

@@ -17,8 +17,8 @@ public class Sub_Shooter extends SubsystemBase {
   /** Creates a new Sub_Shooter. */
   private final SparkFlex Motor_Shoot_R= new SparkFlex(14, MotorType.kBrushless);
   private final SparkFlex Motor_Shoot_L = new SparkFlex(15, MotorType.kBrushless);
-  private final SparkMax Motor_Hood = new SparkMax(18, MotorType.kBrushless);
-  private final SparkMax Motor_Indexer = new SparkMax(16, MotorType.kBrushless);
+  private final SparkMax Motor_Hood = new SparkMax(16, MotorType.kBrushless);
+  private final SparkMax Motor_Indexer = new SparkMax(18, MotorType.kBrushless);
   private final SparkMax Motor_Feeder = new SparkMax(17, MotorType.kBrushless);
   private final RelativeEncoder Hood_Encoder= Motor_Hood.getEncoder();
   private final SparkFlexConfig Motor_Shoot_R_Config = new SparkFlexConfig();
