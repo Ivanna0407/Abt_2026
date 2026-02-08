@@ -8,7 +8,9 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.Cmd_AutoAlign;
 import frc.robot.commands.Cmd_Move_Swerve;
+import frc.robot.commands.Cmd_Test_Feeder;
 import frc.robot.commands.Cmd_resetheading;
 import frc.robot.subsystems.Sub_Shooter;
 import frc.robot.subsystems.Sub_Swerve;
@@ -40,6 +42,11 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     joydrive.start().whileTrue(new Cmd_resetheading(Swerve));
+    joydrive.a().whileTrue(new Cmd_Test_Feeder(shooter, .5));
+    joydrive.b().whileTrue(new Cmd_Test_Feeder(shooter, -.5));
+
+    joydrive.x().whileTrue(new Cmd_AutoAlign(false, Swerve));
+
     //joydrive.a().whileTrue(new Cmd_climb(Swerve, .3));
    // joydrive.b().whileTrue(new Cmd_climb(Swerve, -.3));
     
