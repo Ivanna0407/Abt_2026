@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of Example Path"
+            "pathName": "Example Path"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 2.0
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "New New Path"
+            "name": "Cmd_Auto_Shooter"
           }
         }
       ]

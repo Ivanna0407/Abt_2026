@@ -33,7 +33,7 @@ public class Cmd_Test_Shooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setShooterSpeed(RT.get());
+    shooter.setShooterSpeed(-RT.get());
 
     if(A.get()){
       shooter.setHoodSpeed(-.2);

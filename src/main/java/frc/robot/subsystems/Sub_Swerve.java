@@ -38,12 +38,12 @@ public class Sub_Swerve extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> States;
   private final StructPublisher<Pose2d> Poses;
   private final StructPublisher<Pose2d> Odo;
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(),new Pose2d(10.032,2.086,get2Drotation()));
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(),new Pose2d(12.7,4.2418,get2Drotation()));
   private Field2d field= new Field2d();
   double[] array;
   RobotConfig config;
   private final AprilTagFieldLayout apriltag= AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
-  private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(), new Pose2d(0,0,get2Drotation()));
+  private final SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Swerve.swervekinematics, Pigeon.getRotation2d(), getModulePositions(), new Pose2d(12.7,4.24,get2Drotation()));
     
 
   public Sub_Swerve() {

@@ -31,22 +31,22 @@ public class Cmd_Test_Intake extends Command {
   @Override
   public void execute() {
     if(RB.get()){
-      Intake.setMotorOmegaWheels(.5);
+      Intake.setMotorOmegaWheels(.2);
     }
     else{
       if (LB.get()) {
-        Intake.setMotorOmegaWheels(-.5);
+        Intake.setMotorOmegaWheels(-.2);
       }
       else{Intake.setMotorOmegaWheels(0);}
     }
 
     if(A.get()){
-      Intake.setMotorIntakeWheels(.5);
+      Intake.setMotorIntakeWheels(1);
 
     }
     else{
       if(B.get()){
-        Intake.setMotorIntakeWheels(-.5);
+        Intake.setMotorIntakeWheels(-1);
       }
       else{
         Intake.setMotorIntakeWheels(0);

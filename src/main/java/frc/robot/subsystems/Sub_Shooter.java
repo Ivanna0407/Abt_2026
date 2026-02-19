@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -32,11 +34,18 @@ public class Sub_Shooter extends SubsystemBase {
     Motor_Hood_Config.idleMode(IdleMode.kBrake);
     Motor_Indexer_Config.idleMode(IdleMode.kBrake);
     Motor_Feeder_Config.idleMode(IdleMode.kBrake);
+    Motor_Shoot_L_Config.openLoopRampRate(2);
+    Motor_Shoot_R_Config.openLoopRampRate(2);
     Motor_Shoot_R.set(0);
     Motor_Shoot_L.set(0);
     Motor_Hood.set(0);
     Motor_Indexer.set(0);
     Motor_Feeder.set(0);
+    Motor_Feeder.configure(Motor_Feeder_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    Motor_Hood.configure(Motor_Hood_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    Motor_Shoot_L.configure(Motor_Shoot_L_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    Motor_Shoot_R.configure(Motor_Shoot_R_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    Motor_Indexer.configure(Motor_Indexer_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -61,7 +70,7 @@ public class Sub_Shooter extends SubsystemBase {
   }
 
     public void setFeederSpeed(double speed){
-    Motor_Feeder.set(speed);
+    Motor_Feeder.set(-speed);
   }
 
   public double getHoodEncoder(){
@@ -71,4 +80,6 @@ public class Sub_Shooter extends SubsystemBase {
   public void resetHoodEncoder(){
     Hood_Encoder.setPosition(0);
   }
+
+
 }

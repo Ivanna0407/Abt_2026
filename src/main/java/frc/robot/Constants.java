@@ -44,6 +44,7 @@ public final class Constants {
     new Translation2d(-wheelbase/2,-trackwidth/2));
     public static final double giro_p=.18;
     public static final double giro_i=.021;
+    public static final double hola = 10;
   }
   public static class Subsitemas{
     //public static final double Conversion_muñeca = 360/81;
