@@ -34,9 +34,9 @@ import frc.robot.subsystems.Sub_Climber;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Sub_Swerve Swerve= new Sub_Swerve();
-  private final Sub_Shooter shooter = new Sub_Shooter();
-  private final Sub_Intake Intake = new Sub_Intake();
-  private final Sub_Climber Climber = new Sub_Climber();
+  //private final Sub_Shooter shooter = new Sub_Shooter();
+  //private final Sub_Intake Intake = new Sub_Intake();
+  //private final Sub_Climber Climber = new Sub_Climber();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController joydrive = new CommandXboxController(0);
@@ -47,14 +47,14 @@ public class RobotContainer {
   
   public RobotContainer() {
     // Configure the trigger bindings
-    NamedCommands.registerCommand("Cmd_Auto_Shooter", new Cmd_Auto_Shooter(shooter, 0));
-    NamedCommands.registerCommand("Cmd_Auto_Feeder", new Cmd_Auto_Feeder(shooter));
-    NamedCommands.registerCommand("Cmd_Auto_Intake_B", new Cmd_Auto_Intake(Intake, 0));
-    NamedCommands.registerCommand("Cmd_Auto_Intake_S", new Cmd_Auto_Intake(Intake, 0));
+   // NamedCommands.registerCommand("Cmd_Auto_Shooter", new Cmd_Auto_Shooter(shooter, 0));
+   // NamedCommands.registerCommand("Cmd_Auto_Feeder", new Cmd_Auto_Feeder(shooter));
+   // NamedCommands.registerCommand("Cmd_Auto_Intake_B", new Cmd_Auto_Intake(Intake, 0));
+   // NamedCommands.registerCommand("Cmd_Auto_Intake_S", new Cmd_Auto_Intake(Intake, 0));
    // Swerve.setDefaultCommand(new Cmd_Move_Swerve(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean()));
    Swerve.setDefaultCommand(new Cmd_Move_Swerve_Locon(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean(),() -> joydrive.rightTrigger().getAsBoolean()));
-    Intake.setDefaultCommand(new Cmd_Test_Intake(Intake, () -> joydrive.rightBumper().getAsBoolean(), () -> joydrive.leftBumper().getAsBoolean(), () -> joydrive.a().getAsBoolean(),() -> joydrive.b().getAsBoolean()));
-    shooter.setDefaultCommand(new Cmd_Test_Shooter(shooter, () -> subdrive.getRightTriggerAxis() , () -> subdrive.b().getAsBoolean(), () -> subdrive.a().getAsBoolean(), () -> subdrive.x().getAsBoolean(), ()-> subdrive.y().getAsBoolean()));
+   // Intake.setDefaultCommand(new Cmd_Test_Intake(Intake, () -> joydrive.rightBumper().getAsBoolean(), () -> joydrive.leftBumper().getAsBoolean(), () -> joydrive.a().getAsBoolean(),() -> joydrive.b().getAsBoolean()));
+   // shooter.setDefaultCommand(new Cmd_Test_Shooter(shooter, () -> subdrive.getRightTriggerAxis() , () -> subdrive.b().getAsBoolean(), () -> subdrive.a().getAsBoolean(), () -> subdrive.x().getAsBoolean(), ()-> subdrive.y().getAsBoolean()));
     
     configureBindings();
     
@@ -65,8 +65,8 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     joydrive.start().whileTrue(new Cmd_resetheading(Swerve));
     joydrive.x().whileTrue(new Cmd_AutoAlign(false, Swerve));  
-    subdrive.povUp().whileTrue(new Cmd_MoveClimber(Climber,.5));  
-    subdrive.povDown().whileTrue(new Cmd_MoveClimber(Climber, -.5));
+    //subdrive.povUp().whileTrue(new Cmd_MoveClimber(Climber,.5));  
+   // subdrive.povDown().whileTrue(new Cmd_MoveClimber(Climber, -.5));
   }
 
   /**
