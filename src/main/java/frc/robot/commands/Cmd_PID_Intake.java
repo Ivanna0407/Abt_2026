@@ -44,7 +44,7 @@ public class Cmd_PID_Intake extends Command {
   @Override
   public void initialize() {    
     //double Encoder = SubM.getEncoderCoral();
-    SubI.resetEncoder();
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,12 +53,12 @@ public class Cmd_PID_Intake extends Command {
     error = setPoint - SubI.getEncoderMotorOmega();
     integral_zone = setPoint * 0.1;
 
-    kP = 0.05;
+    kP = 0.02;
     //kI = 0.0;
     //kD = 0.0;
 
     dt = Timer.getFPGATimestamp()-last_time;
-    speed = error  * kP  + error_i /** * kI */ + error_d /* * kD*/;
+    speed = error  * kP;
     error_d = (error - last_error)/dt;
 
     if (Math.abs(error)<integral_zone){error_i+=error*dt;}
@@ -68,7 +68,7 @@ public class Cmd_PID_Intake extends Command {
 
   
 
-    SubI.setMotorOmegaWheels(0.1);
+    SubI.setMotorOmegaWheels(speed);
 
   }
 

@@ -14,6 +14,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Sub_Intake extends SubsystemBase {
@@ -40,11 +41,12 @@ public class Sub_Intake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Encoder intake", getEncoderMotorOmega());
   }
 
   public void setMotorIntakeWheels(double speed){
-    Motor_Intake_Wheels.set(-speed);
-    Motor_Intake_Wheels_2.set(speed);
+    Motor_Intake_Wheels.set(speed);
+    Motor_Intake_Wheels_2.set(-speed);
   }
 
   public void setMotorOmegaWheels(double speed){
@@ -52,7 +54,7 @@ public class Sub_Intake extends SubsystemBase {
   }
 
   public double getEncoderMotorOmega(){
-    return Encoder_Intake_Omega.getPosition()*(360/54);
+    return Encoder_Intake_Omega.getPosition()*(360/120);
   }
 
   public double getMotorIntakeWAmps(){
