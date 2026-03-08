@@ -22,30 +22,47 @@ public class Sub_Shooter extends SubsystemBase {
   private final SparkMax Motor_Hood = new SparkMax(16, MotorType.kBrushless);
   private final SparkMax Motor_Indexer = new SparkMax(18, MotorType.kBrushless);
   private final SparkMax Motor_Feeder = new SparkMax(17, MotorType.kBrushless);
+  private final SparkMax Motor_Feeder2= new SparkMax(24, MotorType.kBrushless);
+  private final SparkFlex Motor_Shoot_R_2 = new SparkFlex(25, MotorType.kBrushless);
+  private final SparkFlex Motor_Shoot_L_2 = new SparkFlex(26, MotorType.kBrushless);
   private final RelativeEncoder Hood_Encoder= Motor_Hood.getEncoder();
   private final SparkFlexConfig Motor_Shoot_R_Config = new SparkFlexConfig();
   private final SparkFlexConfig Motor_Shoot_L_Config = new SparkFlexConfig();
   private final SparkMaxConfig Motor_Hood_Config = new SparkMaxConfig();
   private final SparkMaxConfig Motor_Indexer_Config = new SparkMaxConfig();
   private final SparkMaxConfig Motor_Feeder_Config= new SparkMaxConfig();
+  private final SparkMaxConfig Motor_Feeder2_Config= new SparkMaxConfig();
+  private final SparkMaxConfig Motor_Shoot_L_2_Config= new SparkMaxConfig();
+  private final SparkMaxConfig Motor_Shoot_R_2_Config= new SparkMaxConfig();
   public Sub_Shooter() {
     Motor_Shoot_R_Config.idleMode(IdleMode.kBrake);
     Motor_Shoot_L_Config.idleMode(IdleMode.kBrake);
     Motor_Hood_Config.idleMode(IdleMode.kBrake);
     Motor_Indexer_Config.idleMode(IdleMode.kBrake);
     Motor_Feeder_Config.idleMode(IdleMode.kBrake);
+    Motor_Feeder2_Config.idleMode(IdleMode.kBrake);
+    Motor_Shoot_L_2_Config.idleMode(IdleMode.kBrake);
+    Motor_Shoot_R_2_Config.idleMode(IdleMode.kBrake);
     Motor_Shoot_L_Config.openLoopRampRate(2);
     Motor_Shoot_R_Config.openLoopRampRate(2);
+    Motor_Shoot_L_2_Config.openLoopRampRate(2);
+    Motor_Shoot_R_2_Config.openLoopRampRate(2);
     Motor_Shoot_R.set(0);
     Motor_Shoot_L.set(0);
     Motor_Hood.set(0);
     Motor_Indexer.set(0);
     Motor_Feeder.set(0);
+    Motor_Feeder2.set(0);
+    Motor_Shoot_L_2.set(0);
+    Motor_Shoot_R_2.set(0);
     Motor_Feeder.configure(Motor_Feeder_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     Motor_Hood.configure(Motor_Hood_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     Motor_Shoot_L.configure(Motor_Shoot_L_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     Motor_Shoot_R.configure(Motor_Shoot_R_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     Motor_Indexer.configure(Motor_Indexer_Config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    Motor_Feeder2.configure(Motor_Feeder2_Config,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    Motor_Shoot_L_2.configure(Motor_Shoot_L_2_Config,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    Motor_Shoot_R_2.configure(Motor_Shoot_R_2_Config,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
 
   @Override
@@ -56,6 +73,8 @@ public class Sub_Shooter extends SubsystemBase {
   public void setShooterSpeed(double speed){
     Motor_Shoot_R.set(speed);
     Motor_Shoot_L.set(-speed);
+    Motor_Shoot_R_2.set(speed);
+    Motor_Shoot_L_2.set(-speed);
   }
 
   public double getShooterAmps(){
@@ -71,6 +90,7 @@ public class Sub_Shooter extends SubsystemBase {
 
     public void setFeederSpeed(double speed){
     Motor_Feeder.set(-speed);
+    Motor_Feeder2.set(speed);
   }
 
   public double getHoodEncoder(){

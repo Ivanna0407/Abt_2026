@@ -23,7 +23,7 @@ public class Cmd_Move_Swerve_Locon extends Command {
   private final Supplier<Boolean> RT; 
 
   private PIDController rotationPID; 
-  private final Translation2d hubPose= new Translation2d(4.62,4.03);
+  private final Translation2d hubPose;
   private Pose2d robotPose;
 
   private double dx; 
@@ -34,7 +34,7 @@ public class Cmd_Move_Swerve_Locon extends Command {
 
   private double rotOut; 
 
-  public Cmd_Move_Swerve_Locon(Sub_Swerve Sub_Swerve,Supplier<Double> Xaxis,Supplier<Double> Yaxis,Supplier<Double> giros,Supplier<Boolean> fieldoriented,Supplier<Boolean> slow, Supplier<Boolean> RT) {
+  public Cmd_Move_Swerve_Locon(Sub_Swerve Sub_Swerve,Supplier<Double> Xaxis,Supplier<Double> Yaxis,Supplier<Double> giros,Supplier<Boolean> fieldoriented,Supplier<Boolean> slow, Supplier<Boolean> RT,Translation2d hubPose) {
     this.sub_Swerve=Sub_Swerve;
     this.Xaxis=Xaxis;
     this.Yaxis=Yaxis;
@@ -42,6 +42,7 @@ public class Cmd_Move_Swerve_Locon extends Command {
     this.fieldoriented=fieldoriented;
     this.slow=slow;
     this.RT = RT; 
+    this.hubPose=hubPose;
     addRequirements(Sub_Swerve);
 
     rotationPID= new PIDController(1.5, 0, 0); 
@@ -53,6 +54,7 @@ public class Cmd_Move_Swerve_Locon extends Command {
   @Override
   public void initialize() {
     sub_Swerve.zeroHeading();
+  
   }
   ChassisSpeeds chassisSpeeds;
   @Override

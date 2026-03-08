@@ -23,13 +23,17 @@ public class Cmd_AutoAlignHood extends Command {
   private double speedHood; 
   private PIDController hood_PID;  
   private double currentAngle;
-  private double DesiredAngle;
+
+  private double DesiredAngle1;
+  private double DesiredAngle2;
+  private double DesiredAngle3;
+
 
   /** Creates a new Cmd_AutoAlignHood. */
   public Cmd_AutoAlignHood(Sub_Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.Shooter = shooter;
-    hood_PID = new PIDController(0.19, 0, 0.0); //luego le pones las cacas
+    hood_PID = new PIDController(0.19, 0, 0.0); //luego le pones los puntos
 
   }
 
@@ -56,6 +60,9 @@ public class Cmd_AutoAlignHood extends Command {
       // [5] = roll 
 
       double[] positions = LimelightHelpers.getBotPose_TargetSpace("limelight-abt"); 
+      //el positions ya guarda todas las poses de arriba
+
+      
   }
 
   // Called once the command ends or is interrupted.

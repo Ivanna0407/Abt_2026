@@ -7,15 +7,14 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Cmd_AutoAlign;
 import frc.robot.commands.Cmd_Auto_Feeder;
 import frc.robot.commands.Cmd_Auto_Intake;
 import frc.robot.commands.Cmd_Auto_Shooter;
-import frc.robot.commands.Cmd_MoveClimber;
 import frc.robot.commands.Cmd_Move_Swerve;
-import frc.robot.commands.Cmd_Test_Feeder;
 import frc.robot.commands.Cmd_Test_Intake;
 import frc.robot.commands.Cmd_Test_Shooter;
 import frc.robot.commands.Cmd_Move_Swerve_Locon;
@@ -24,7 +23,6 @@ import frc.robot.commands.Cmd_resetheading;
 import frc.robot.subsystems.Sub_Intake;
 import frc.robot.subsystems.Sub_Shooter;
 import frc.robot.subsystems.Sub_Swerve;
-import frc.robot.subsystems.Sub_Climber;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -48,12 +46,12 @@ public class RobotContainer {
   
   public RobotContainer() {
     // Configure the trigger bindings
-   // NamedCommands.registerCommand("Cmd_Auto_Shooter", new Cmd_Auto_Shooter(shooter, 0));
-   // NamedCommands.registerCommand("Cmd_Auto_Feeder", new Cmd_Auto_Feeder(shooter));
-   // NamedCommands.registerCommand("Cmd_Auto_Intake_B", new Cmd_Auto_Intake(Intake, 0));
-   // NamedCommands.registerCommand("Cmd_Auto_Intake_S", new Cmd_Auto_Intake(Intake, 0));
-   // Swerve.setDefaultCommand(new Cmd_Move_Swerve(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean()));
-   Swerve.setDefaultCommand(new Cmd_Move_Swerve_Locon(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean(),() -> joydrive.rightTrigger().getAsBoolean()));
+    NamedCommands.registerCommand("Cmd_Auto_Shooter", new Cmd_Auto_Shooter(shooter, 0));
+    NamedCommands.registerCommand("Cmd_Auto_Feeder", new Cmd_Auto_Feeder(shooter));
+    NamedCommands.registerCommand("Cmd_Auto_Intake_B", new Cmd_Auto_Intake(Intake, 0));
+    NamedCommands.registerCommand("Cmd_Auto_Intake_S", new Cmd_Auto_Intake(Intake, 0));
+    Swerve.setDefaultCommand(new Cmd_Move_Swerve(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean()));
+   Swerve.setDefaultCommand(new Cmd_Move_Swerve_Locon(Swerve, () -> joydrive.getLeftX(), () -> joydrive.getLeftY(), ()-> joydrive.getRightX(),() -> joydrive.rightBumper().getAsBoolean(),() -> joydrive.y().getAsBoolean(),() -> joydrive.rightTrigger().getAsBoolean(), new Translation2d(11.91,4.03)));
     Intake.setDefaultCommand(new Cmd_Test_Intake(Intake, () -> joydrive.rightBumper().getAsBoolean(), () -> joydrive.leftBumper().getAsBoolean(), () -> joydrive.a().getAsBoolean(),() -> joydrive.b().getAsBoolean()));
     shooter.setDefaultCommand(new Cmd_Test_Shooter(shooter, () -> subdrive.getRightTriggerAxis() , () -> subdrive.b().getAsBoolean(), () -> subdrive.a().getAsBoolean(), () -> subdrive.x().getAsBoolean(), ()-> subdrive.y().getAsBoolean()));
     
